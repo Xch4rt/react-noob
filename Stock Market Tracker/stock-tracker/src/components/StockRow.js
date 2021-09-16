@@ -1,24 +1,51 @@
 import React, {Component} from 'react';
 import { iex } from '../config/iex';
 import { stock } from '../resources/stock';
-const changeStyle = {
-    color : '#4caf50',
-    fontSize : '0.8rem',
-    marginLeft : 5
-  }
+
+//#e53935
+
+
 class StockRow extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            // Pediremos todo esto atravez de la api  
-            data : {}
+            price : null,
+            date : null,
+            time : null,
+            dollar_change : null,
+            percent_change : null
+            
+            
         }
     }
+    changeStyle () {
+        var color;
+        if (this.state.dollar_change > 0)
+            color = '#4caf50'
+        else
+            color = '#e53935'
+        return {
+        color : color,
+        fontSize : '0.8rem',
+        marginLeft : 5}
+  }
 
     applyData(data)
     {
         this.setState({
-            data : data
+            price : data.price.toFixed(2),
+            date : data.date,
+            time : data.time,
+        });
+        stock.getYesterdaysClose(this.props.ticker, data.date, (yesterday) => {
+            const dollar_change = (data.price - yesterday.price).toFixed(2);
+            const percent_change = (100 * dollar_change / yesterday.price).toFixed(2)
+            this.setState({
+                // Price is a bad methos name on yesterday
+                
+                dollar_change : dollar_change,
+                percent_change : percent_change
+            })
         })
     }
 
@@ -31,9 +58,13 @@ class StockRow extends Component {
         
         return ( 
             <li className="list-group-item">
-            <b>{this.props.ticker}</b> ${this.state.data.price}
-            <span className="change" style={changeStyle}>
-              +12.32 (1.4%)
+            <b>{this.props.ticker}</b> ${this.state.price}
+            <span className="change" style={this.changeStyle()}>
+                
+                ${this.state.dollar_change}
+                &nbsp; &nbsp;
+                {this.state.percent_change}%
+              
             </span>
           </li>    
         );

@@ -11,6 +11,7 @@ function App() {
         <div className="col-md-5 mt-5">
           <div className="card">          
               <ul className="list-group list-group-flush">
+                <StockRow ticker="grub"/>
                 <StockRow ticker="goog"/>
                 <StockRow ticker="tsla"/>
                 <StockRow ticker="msft"/>

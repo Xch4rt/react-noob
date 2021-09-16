@@ -23,6 +23,16 @@ export const stock = {
             formattedData.date = stockData.date
             formattedData.time = stockData.label
             return formattedData
-    }
+    },
+    getYesterdaysClose : (ticker, date, callback) => {
+        fetch(stock.yesterdaysCloseURL(ticker, date))
+        .then((response) => response.json())
+        .then((data) =>  callback(stock.formattedPriceData(data))
+        )
+    },
+    yesterdaysCloseURL : (ticker, date) => {
+        return `${iex.base_url}/stock/${ticker}/intraday-prices?chartLast=1&exactDate=20210914&token=${iex.api_token}`}
+    ,
+
 
 }
